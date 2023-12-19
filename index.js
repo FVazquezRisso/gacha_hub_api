@@ -1,7 +1,17 @@
-const server =  require("express");
+const server = require("./src/server");
+const { conn } = require("./src/db.js");
 
-const app = server()
+const PORT = 3001;
 
-app.get('/', (req, res) => res.send('Ruta inicial'))
+const isTesting = process.env.NODE_ENV === "test";
 
-app.listen(3000)
+if (!isTesting) {
+  conn
+    .sync({ force: true })
+    .then(() => {
+      server.listen(PORT, async () => {
+        console.log(`Server listening on port ${PORT}`);
+      });
+    })
+    .catch((error) => console.error(error));
+}
