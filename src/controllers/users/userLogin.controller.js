@@ -5,15 +5,21 @@ const { ERROR_401, ERROR_404 } = require("../../constants/responses.constants");
 require("dotenv").config();
 
 const login = async (req, res) => {
-  const { username, password } = req.body
+  const { username, password } = req.body;
   try {
     const userFound = await User.findByPk(username);
 
-    if (!userFound) return res.status(ERROR_404.statusCode).json({ error: ERROR_404.message })
+    if (!userFound)
+      return res
+        .status(ERROR_404.statusCode)
+        .json({ error: ERROR_404.message });
 
     const passwordVerified = await verifyPassword(password, userFound.password);
 
-    if (!passwordVerified) return res.status(ERROR_401.statusCode).json({ error: ERROR_401.message });
+    if (!passwordVerified)
+      return res
+        .status(ERROR_401.statusCode)
+        .json({ error: ERROR_401.message });
 
     const payload = {
       username,
@@ -26,7 +32,7 @@ const login = async (req, res) => {
     const token = jwt.sign(payload, SECRET_KEY);
     return res.json({ token });
   } catch (error) {
-    return { error: error.message };
+    return res.status(500).json({ error: error.message });
   }
 };
 

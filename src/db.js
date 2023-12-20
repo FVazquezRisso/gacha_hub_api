@@ -38,6 +38,8 @@ const { User, Post } = sequelize.models;
 
 // Ceramos las relaciones entre los modelos
 User.hasMany(Post);
+User.belongsToMany(Post, { through: "Likes" });
+Post.belongsToMany(User, { through: "Likes" });
 
 module.exports = {
   ...sequelize.models,
