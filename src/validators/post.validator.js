@@ -15,5 +15,19 @@ const validateCreatePost = [
   },
 ];
 
+const validateEditPost = [
+  check("id").exists().notEmpty().withMessage(validationMessages.IS_EMPTY),
 
-module.exports = { validateCreatePost };
+  check("content")
+    .exists()
+    .notEmpty()
+    .withMessage(validationMessages.IS_EMPTY)
+    .isLength({ min: 10, max: 1000 })
+    .withMessage(validationMessages.IS_LENGTH_RANGE(10, 1000)),
+
+  (req, res, next) => {
+    validateResult(req, res, next);
+  },
+];
+
+module.exports = { validateCreatePost, validateEditPost };
