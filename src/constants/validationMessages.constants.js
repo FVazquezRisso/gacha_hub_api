@@ -34,5 +34,5 @@ module.exports = {
   IS_USERNAME:
     "El nombre de usuario sólo puede contener letras mayúsculas, letras minúsculas, números y guiones bajos",
   IS_PASSWORD:
-    "La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número",
+    "La contraseña debe contener al menos una letra y un número",
 };

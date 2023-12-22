@@ -18,7 +18,7 @@ const validateRegisterUser = [
     .withMessage(validationMessages.IS_EMPTY)
     .isLength({ min: 8, max: 100 })
     .withMessage(validationMessages.IS_LENGTH_RANGE(8, 100))
-    .matches(/^(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])\S{8,100}$/g)
+    .matches(/^(?=\S*\d)(?=\S*[A-Za-z])\S{8,100}$/g)
     .withMessage(validationMessages.IS_PASSWORD),
 
   (req, res, next) => {
