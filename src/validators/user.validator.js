@@ -42,7 +42,22 @@ const validateLoginUser = [
   },
 ];
 
+const validateChangeUserInfo = [
+  check("bio")
+    .isLength({ max: 1000 })
+    .withMessage(validationMessages.IS_LENGTH_MAX(50)),
+
+  check("discordUsername")
+    .isLength({ max: 50 })
+    .withMessage(validationMessages.IS_LENGTH_MAX(50)),
+
+  (req, res, next) => {
+    validateResult(req, res, next);
+  },
+];
+
 module.exports = {
   validateRegisterUser,
   validateLoginUser,
+  validateChangeUserInfo,
 };

@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
 
-      profileImageUrl: {
+      avatar: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue:
@@ -40,7 +40,14 @@ module.exports = (sequelize) => {
 
       bio: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: 'Sin biografía',
+        validate: {
+          len: {
+            args: [0, 1000],
+            msg: "El campo bio debe tener como máximo 1000 caracteres.",
+          },
+        },
       },
 
       discordUsername: {

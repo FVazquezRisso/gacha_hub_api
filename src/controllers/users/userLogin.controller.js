@@ -23,6 +23,7 @@ const login = async (req, res) => {
 
     const payload = {
       username,
+      avatar: userFound.avatar,
       role: userFound.role,
       isVerified: userFound.isVerified,
     };
