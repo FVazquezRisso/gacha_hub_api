@@ -44,8 +44,8 @@ const validateLoginUser = [
 
 const validateChangeUserInfo = [
   check("bio")
-    .isLength({ max: 1000 })
-    .withMessage(validationMessages.IS_LENGTH_MAX(50)),
+    .isLength({ max: 200 })
+    .withMessage(validationMessages.IS_LENGTH_MAX(200)),
 
   check("discordUsername")
     .isLength({ max: 50 })
