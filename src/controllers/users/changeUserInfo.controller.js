@@ -10,16 +10,16 @@ const {
 const changeUserInfo = async (req, res) => {
   const userToModify = req.params.username;
   const { username, role } = req.user;
-  const { bio, discordUsername } = req.body;
+  const { bio, discordUsername, avatar, banner } = req.body;
   try {
-    if (!bio && !discordUsername)
+    if (!bio && !discordUsername && !avatar && !banner)
       return res
         .status(ERROR_400.statusCode)
         .json({ error: ERROR_400.message });
 
     if (userToModify !== username && role !== "admin")
       return res
-        .status(ERROR_403.statusCode)
+        .status(ERROR_403.statusCode) 
         .json({ error: ERROR_403.message });
 
     const userFound = await User.findByPk(userToModify);
@@ -30,7 +30,7 @@ const changeUserInfo = async (req, res) => {
         .json({ error: ERROR_404.message });
 
     const modifiedUser = await User.update(
-      { bio, discordUsername },
+      { bio, discordUsername, avatar, banner },
       { where: { username: userToModify } }
     );
 

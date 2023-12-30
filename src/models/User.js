@@ -30,6 +30,25 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue:
           "https://proyectoidis.org/wp-content/uploads/2021/06/avatar-default.png",
+        validate: {
+          is: {
+            args: /\.(jpg|jpeg|png)$/,
+            msg: "El campo avatar debe contener un formato de imagen válido",
+          },
+        },
+      },
+
+      banner: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue:
+          "https://www.mub.eps.manchester.ac.uk/science-engineering/wp-content/themes/uom-theme/assets/images/default-banner.jpg",
+        validate: {
+          is: {
+            args: /\.(jpg|jpeg|png)$/,
+            msg: "El campo banner debe contener un formato de imagen válido",
+          },
+        },
       },
 
       role: {
@@ -40,12 +59,11 @@ module.exports = (sequelize) => {
 
       bio: {
         type: DataTypes.TEXT,
-        allowNull: false,
-        defaultValue: 'Sin biografía',
+        allowNull: true,
         validate: {
           len: {
-            args: [0, 1000],
-            msg: "El campo bio debe tener como máximo 1000 caracteres.",
+            args: [0, 200],
+            msg: "El campo bio debe tener como máximo 200 caracteres.",
           },
         },
       },
