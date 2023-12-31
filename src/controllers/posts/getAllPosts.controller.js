@@ -1,16 +1,26 @@
 const { Post, User } = require("../../db");
+const { Op } = require("sequelize");
 
 const getAllPosts = async (req, res) => {
-  const { page = 1, pageSize = 10, author, username } = req.query;
+  const { page = 1, pageSize = 10, author, username, following, content } = req.query;
   try {
-    const offset = (page - 1) * pageSize;
+    let where = author ? { UserUsername: author } : {};
 
-    const where = author ? { UserUsername: author } : {};
+    if (following) {
+      const currentUser = await User.findOne({ where: { username: following } });
+      const followedUserIds = await currentUser
+        .getFollowing()
+        .then((users) => users.map((user) => user.username));
+
+      where = { ...where, UserUsername: followedUserIds };
+    }
+
+    const offset = (page - 1) * pageSize;
 
     const posts = await Post.findAll({
       limit: Number(pageSize),
       offset,
-      where,
+      where: { ...where, content: { [Op.like]: `%${content || ''}%` } },
       order: [["createdAt", "DESC"]],
     });
 
@@ -50,7 +60,7 @@ const getAllPosts = async (req, res) => {
         ...postWithoutUsername,
         likeCount,
         userLikedPost,
-        commentCount
+        commentCount,
       };
     });
 
