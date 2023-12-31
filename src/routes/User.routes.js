@@ -5,14 +5,17 @@ const userLogin = require("../controllers/users/userLogin.controller");
 const getUserByUsername = require('../controllers/users/getUserByUsername.controller')
 const auth = require("../middlewares/authentication");
 const changeUserInfo = require('../controllers/users/changeUserInfo.controller')
+const getAllUsers = require('../controllers/users/getAllUsers.controller')
 
 const userRouter = Router();
 
 userRouter.post("/register", validateRegisterUser, userRegister);
 
-userRouter.post("/login", validateLoginUser, userLogin);
+userRouter.post("/login", validateLoginUser, userLogin)
 
-userRouter.get('/:username', getUserByUsername)
+userRouter.get("/", getAllUsers);
+
+userRouter.get('/:username', auth, getUserByUsername)
 
 userRouter.patch('/:username', auth, validateChangeUserInfo, changeUserInfo)
 
