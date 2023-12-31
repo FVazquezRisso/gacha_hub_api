@@ -46,6 +46,18 @@ Comment.belongsTo(Post);
 User.hasMany(Comment);
 Post.hasMany(Comment);
 
+User.belongsToMany(User, {
+  as: "Followers",
+  through: "Follow",
+  foreignKey: "followerId",
+});
+
+User.belongsToMany(User, {
+  as: "Following",
+  through: "Follow",
+  foreignKey: "followedId",
+});
+
 module.exports = {
   ...sequelize.models,
   conn: sequelize,
