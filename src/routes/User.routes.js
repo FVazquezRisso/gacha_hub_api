@@ -17,6 +17,6 @@ userRouter.get("/", getAllUsers);
 
 userRouter.get('/:username', auth, getUserByUsername)
 
-userRouter.patch('/:username', auth, validateChangeUserInfo, changeUserInfo)
+userRouter.put('/:username', auth, validateChangeUserInfo, changeUserInfo)
 
 module.exports = userRouter;

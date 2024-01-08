@@ -12,7 +12,7 @@ const postRouter = Router();
 
 postRouter.post("/", auth, validateCreatePost, createPost);
 
-postRouter.patch("/:id", auth, validateEditPost, editPost);
+postRouter.put("/:id", auth, validateEditPost, editPost);
 
 postRouter.delete("/:id", auth, deletePost);
 
