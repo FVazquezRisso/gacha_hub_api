@@ -1,4 +1,4 @@
-const { Group, User } = require("../../db");
+const { Group, User, Post } = require("../../db");
 const { ERROR_404 } = require("../../constants/responses.constants.js");
 
 const getAllGroups = async (req, res) => {
@@ -15,11 +15,38 @@ const getAllGroups = async (req, res) => {
 
       const userGroups = await user.getGroups();
 
-      return res.status(200).json(userGroups);
+      const groupsWithInfo = await Promise.all(
+        userGroups.map(async (group) => {
+          const userCount = await group.countUsers();
+          const postCount = await Post.count({ where: { GroupId: group.id } });
+
+          return {
+            ...group.toJSON(),
+            userCount,
+            postCount,
+          };
+        })
+      );
+
+      return res.status(200).json(groupsWithInfo);
     }
+
     const allGroups = await Group.findAll();
 
-    return res.status(200).json(allGroups);
+    const groupsWithInfo = await Promise.all(
+      allGroups.map(async (group) => {
+        const userCount = await group.countUsers();
+        const postCount = await Post.count({ where: { GroupId: group.id } });
+
+        return {
+          ...group.toJSON(),
+          userCount,
+          postCount,
+        };
+      })
+    );
+
+    return res.status(200).json(groupsWithInfo);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
