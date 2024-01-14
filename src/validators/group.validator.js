@@ -7,8 +7,8 @@ const validateCreateGroup = [
     .exists()
     .withMessage(validationMessages.IS_EMPTY)
     .notEmpty()
-    .isLength({ min: 2, max: 50 })
-    .withMessage(validationMessages.IS_LENGTH_RANGE(2, 50)),
+    .isLength({ min: 4, max: 50 })
+    .withMessage(validationMessages.IS_LENGTH_RANGE(4, 50)),
 
   (req, res, next) => {
     validateResult(req, res, next);

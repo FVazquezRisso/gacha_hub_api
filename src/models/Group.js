@@ -16,8 +16,8 @@ module.exports = (sequelize) => {
         unique: true,
         validate: {
           len: {
-            args: [2, 50],
-            msg: "El campo contenido debe tener entre 2 y 50 caracteres.",
+            args: [4, 50],
+            msg: "El campo contenido debe tener entre 4 y 50 caracteres.",
           },
         },
       },
