@@ -1,5 +1,6 @@
 const { Post, User, Group } = require("../../db");
 const {
+  ERROR_403,
   ERROR_404,
   ERROR_500,
   SUCCESS_201,
@@ -35,8 +36,16 @@ const createPost = async (req, res) => {
         return res
           .status(ERROR_404.statusCode)
           .json({ error: ERROR_404.message });
-      
-      groupFound.addPost(createdPost)
+
+      const isUserMember = await groupFound.hasUser(userFound);
+
+      if (!isUserMember) {
+        return res.status(ERROR_403.statusCode).json({
+          error: ERROR_403.message,
+        });
+      }
+
+      await groupFound.addPost(createdPost);
     }
 
     return res
