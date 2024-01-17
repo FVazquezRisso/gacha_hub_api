@@ -3,8 +3,10 @@ const { ERROR_404 } = require("../../constants/responses.constants.js");
 const { Op } = require("sequelize");
 
 const getAllGroups = async (req, res) => {
-  const { username, name } = req.query;
+  const { page = 1, pageSize = 10, username, name } = req.query;
   try {
+    const offset = (page - 1) * pageSize;
+
     if (username) {
       const user = await User.findByPk(username);
 
@@ -14,7 +16,11 @@ const getAllGroups = async (req, res) => {
           .json({ error: ERROR_404.message });
       }
 
-      const userGroups = await user.getGroups();
+      const userGroups = await user.getGroups({
+        limit: Number(pageSize),
+        offset,
+        order: [["createdAt", "DESC"]],
+      });
 
       const groupsWithInfo = await Promise.all(
         userGroups.map(async (group) => {
@@ -29,12 +35,24 @@ const getAllGroups = async (req, res) => {
         })
       );
 
-      return res.status(200).json(groupsWithInfo);
+      const totalGroups = await user.countGroups();
+
+      return res.status(200).json({
+        page: Number(page),
+        pageSize: Number(pageSize),
+        totalGroups,
+        groups: groupsWithInfo,
+      });
     }
 
     const where = name ? { name: { [Op.like]: `%${name}%` } } : {};
 
-    const allGroups = await Group.findAll({ where, limit: 20 });
+    const allGroups = await Group.findAll({
+      where,
+      limit: Number(pageSize),
+      offset,
+      order: [["createdAt", "DESC"]],
+    });
 
     const groupsWithInfo = await Promise.all(
       allGroups.map(async (group) => {
@@ -49,7 +67,14 @@ const getAllGroups = async (req, res) => {
       })
     );
 
-    return res.status(200).json(groupsWithInfo);
+    const totalGroups = await Group.count({ where });
+
+    return res.status(200).json({
+      page: Number(page),
+      pageSize: Number(pageSize),
+      totalGroups,
+      groups: groupsWithInfo,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
