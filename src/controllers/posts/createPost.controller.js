@@ -1,12 +1,13 @@
-const { Post, User } = require("../../db");
+const { Post, User, Group } = require("../../db");
 const {
+  ERROR_403,
   ERROR_404,
   ERROR_500,
   SUCCESS_201,
 } = require("../../constants/responses.constants");
 
 const createPost = async (req, res) => {
-  const { content } = req.body;
+  const { content, groupId } = req.body;
   const { username } = req.user;
   try {
     const userFound = await User.findByPk(username);
@@ -27,6 +28,25 @@ const createPost = async (req, res) => {
       return res
         .status(ERROR_500.statusCode)
         .json({ error: ERROR_500.message });
+
+    if (groupId) {
+      const groupFound = await Group.findByPk(groupId);
+
+      if (!groupFound)
+        return res
+          .status(ERROR_404.statusCode)
+          .json({ error: ERROR_404.message });
+
+      const isUserMember = await groupFound.hasUser(userFound);
+
+      if (!isUserMember) {
+        return res.status(ERROR_403.statusCode).json({
+          error: ERROR_403.message,
+        });
+      }
+
+      await groupFound.addPost(createdPost);
+    }
 
     return res
       .status(SUCCESS_201.statusCode)

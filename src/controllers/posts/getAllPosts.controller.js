@@ -2,7 +2,7 @@ const { Post, User } = require("../../db");
 const { Op } = require("sequelize");
 
 const getAllPosts = async (req, res) => {
-  const { page = 1, pageSize = 10, author, username, following, content } = req.query;
+  const { page = 1, pageSize = 10, author, username, following, content, groupId } = req.query;
   try {
     let where = author ? { UserUsername: author } : {};
 
@@ -14,6 +14,10 @@ const getAllPosts = async (req, res) => {
 
       where = { ...where, UserUsername: followedUserIds };
     }
+
+     if (groupId) {
+       where = { ...where, GroupId: groupId };
+     }
 
     const offset = (page - 1) * pageSize;
 
