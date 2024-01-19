@@ -34,7 +34,7 @@ fs.readdirSync(path.join(__dirname, "models"))
   });
 
 // Extraemos los modelos:
-const { User, Post, Comment, Group } = sequelize.models;
+const { User, Post, Comment, Group, Message } = sequelize.models;
 
 // Ceramos las relaciones entre los modelos
 User.hasMany(Post);
@@ -62,6 +62,11 @@ User.belongsToMany(Group, { through: "UserGroup" });
 Group.belongsToMany(User, { through: "UserGroup" });
 Post.belongsTo(Group);
 Group.hasMany(Post);
+
+User.hasMany(Message)
+Message.belongsTo(User)
+Group.hasMany(Message)
+Message.belongsTo(Group)
 
 module.exports = {
   ...sequelize.models,
